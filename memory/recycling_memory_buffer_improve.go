@@ -1,6 +1,5 @@
 package main
 
-// ref: http://blog.cloudflare.com/recycling-memory-buffers-in-go/
 import (
 	"fmt"
 	"math/rand"
@@ -15,15 +14,28 @@ func makeBuffer() []byte {
 func main() {
 	pool := make([][]byte, 20)
 
+	buffer := make(chan []byte, 5)
+
 	var m runtime.MemStats
-
 	makes := 0
-
 	for {
-		b := makeBuffer()
-		makes += 1
+		var b []byte
+		select {
+		case b = <-buffer:
+		default:
+			makes += 1
+			b = makeBuffer()
+		}
 
 		i := rand.Intn(len(pool))
+		if pool[i] != nil {
+			select {
+			case buffer <- pool[i]:
+				pool[i] = nil
+			default:
+			}
+		}
+
 		pool[i] = b
 
 		time.Sleep(time.Second)
