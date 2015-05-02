@@ -39,11 +39,36 @@ got
 
 Lessions
 
-- default -benchtime is 1s, if one test spend one more 1 second, benchmark will test one time only
+- default -benchtime is 1s, if one test spend one more a second, benchmark will test one time only
 - don't put large spend time operate in benchmark test, if need, put it on init or const.
 
 * call func spend
 
+.code golang_benchmark/01_base_operate.go /func add/,/^}/
 
+.code golang_benchmark/01_base_operate.go /type AddInt/,/^}/
+
+.code golang_benchmark/01_base_operate.go /type Add /,
+
+* call func spend
+
+run with
+
+	go test -bench BenchmarkAdd -benchmem
+
+got
+
+	BenchmarkAddFuncCall	2000000000	         0.48 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddIntStructCall	2000000000	         1.79 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddStructCall	2000000000	         1.79 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddTwoStructCall	2000000000	         0.47 ns/op	       0 B/op	       0 allocs/op
+
+* call func spend
+
+Lessions
+
+- func all 
+- 
 
 * array iterator spend
+

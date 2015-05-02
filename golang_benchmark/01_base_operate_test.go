@@ -31,10 +31,36 @@ func BenchmarkBaseOperateSleep1Second(b *testing.B) {
 	_ = sum
 }
 
-func BenchmarkFuncCall(b *testing.B) {
+func BenchmarkAddFuncCall(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
 		sum = add(i, sum)
 	}
+	_ = sum
+}
+
+func BenchmarkAddIntStructCall(b *testing.B) {
+	s := AddInt(0)
+	for i := 0; i < b.N; i++ {
+		s.add(i)
+	}
+	_ = s
+}
+
+func BenchmarkAddStructCall(b *testing.B) {
+	s := &Add{}
+	for i := 0; i < b.N; i++ {
+		s.add(i)
+	}
+	_ = s
+}
+
+func BenchmarkAddTwoStructCall(b *testing.B) {
+	sum := 0
+	s := &Add{}
+	for i := 0; i < b.N; i++ {
+		sum = s.addTwo(i, sum)
+	}
+	_ = s
 	_ = sum
 }
