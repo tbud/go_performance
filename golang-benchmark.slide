@@ -1,0 +1,49 @@
+Golang Benchmark
+
+Peng Yi
+peace0phmind@gmail.com
+
+* base operate
+
+use those 3 test case
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperate/,/^}/
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperateSleep1Microsecond/,/^}/ 
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperateSleep1Second/
+
+* base operate
+
+run with
+
+	go test -bench BenchmarkBaseOperate -benchmem
+
+got
+
+	BenchmarkBaseOperate	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.49 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Second	       1	1004995127 ns/op	      64 B/op	       1 allocs/op
+
+run with
+
+	go test -bench BenchmarkBaseOperate -benchmem -benchtime 5s
+
+got
+
+	BenchmarkBaseOperate	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.49 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Second	2000000000	         1.00 ns/op	       0 B/op	       0 allocs/op
+
+* base operate
+
+Lessions
+
+- default -benchtime is 1s, if one test spend one more 1 second, benchmark will test one time only
+- don't put large spend time operate in benchmark test, if need, put it on init or const.
+
+* call func spend
+
+
+
+* array iterator spend
