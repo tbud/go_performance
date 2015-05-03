@@ -8,7 +8,7 @@ import (
 func BenchmarkBaseOperate(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
-		sum += i
+		sum += i // HL
 	}
 	_ = sum
 }
@@ -34,7 +34,7 @@ func BenchmarkBaseOperateSleep1Second(b *testing.B) {
 func BenchmarkAddFuncCall(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
-		sum = add(i, sum)
+		sum = add(i, sum) // HL
 	}
 	_ = sum
 }
@@ -42,7 +42,7 @@ func BenchmarkAddFuncCall(b *testing.B) {
 func BenchmarkAddIntStructCall(b *testing.B) {
 	s := AddInt(0)
 	for i := 0; i < b.N; i++ {
-		s.add(i)
+		s.add(i) // HL
 	}
 	_ = s
 }

@@ -65,10 +65,56 @@ got
 
 * call func spend
 
+disassember the code:
+
+	go tool 6g -S 01_base_operate_test.go 01_base_operate.go
+
+line 11
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperate/,/^}/
+
+will be
+
+	0x0012 00018 (01_base_operate_test.go:11)	ADDQ	AX,CX
+	0x0015 00021 (01_base_operate_test.go:11)	NOP	,
+
+* call func spend
+
+line 37
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkAddFuncCall/,/^}/
+
+will be
+
+	0x0012 00018 (01_base_operate_test.go:37)	MOVQ	AX,BX
+	0x0015 00021 (01_base_operate_test.go:37)	ADDQ	CX,BX
+	0x0018 00024 (01_base_operate_test.go:37)	MOVQ	BX,CX
+
+* call func spend
+
+line 45
+
+.code golang_benchmark/01_base_operate_test.go /BenchmarkAddIntStructCall/,/^}/
+
+will be
+
+	0x001c 00028 (01_base_operate_test.go:45)	LEAQ	"".s+0(SP),BX
+	0x0020 00032 (01_base_operate_test.go:45)	NOP	,
+	0x0020 00032 (01_base_operate_test.go:45)	MOVQ	(BX),DX
+	0x0023 00035 (01_base_operate_test.go:45)	NOP	,
+	0x0023 00035 (01_base_operate_test.go:45)	MOVQ	AX,BP
+	0x0026 00038 (01_base_operate_test.go:45)	ADDQ	DX,BP
+	0x0029 00041 (01_base_operate_test.go:45)	MOVQ	BP,(BX)
+	0x002c 00044 (01_base_operate_test.go:45)	NOP	,
+
+
+* call func spend
+
 Lessions
 
-- func all 
-- 
+- simple func call will be inline
+- wrap base type to program object-oriented bring large cost
 
 * array iterator spend
+
 
