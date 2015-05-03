@@ -115,6 +115,40 @@ Lessions
 - simple func call will be inline
 - wrap base type to program object-oriented bring large cost
 
-* array iterator spend
+* array and slice iterator
 
+i use three kind of iterator to iterator array and slice
+
+.code golang_benchmark/03_array_iterator_test.go /var iarray/,/var islice/
+
+.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArray/,/^}/
+
+* array and slice iterator
+
+.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArrayRange/,/^}/
+
+.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArrayRangeValue/,/^}/
+
+* array and slice iterator
+
+run array iterator
+
+	go test -bench BenchmarkIterator -benchmem
+
+got
+
+	BenchmarkIteratorArrayFor	200000000	         8.24 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceFor	300000000	         5.84 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorArrayRange	200000000	         8.14 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceRange	300000000	         5.82 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorArrayRangeValue	200000000	         9.02 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceRangeValue	300000000	         5.07 ns/op	       0 B/op	       0 allocs/op
+
+what's the different?
+
+disassember code:
+
+	go tool 6g -S 03_array_iterator_test.go
+
+* array and slice iterator
 
