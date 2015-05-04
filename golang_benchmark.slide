@@ -3,6 +3,19 @@ Golang Benchmark
 Peng Yi
 peace0phmind@gmail.com
 
+* prepare
+
+To ensure benchmark test accurately, the CPU frequency scaling must be disabled.
+
+Default on centos, this feature is closed. Or you can disable via:
+
+	$ sudo bash
+	# for i in /sys/devices/system/cpu/cpu[0-7]
+	do
+	    echo performance > $i/cpufreq/scaling_governor
+	done
+	#
+
 * base operate
 
 use those 3 test case
@@ -21,9 +34,9 @@ run with
 
 got
 
-	BenchmarkBaseOperate	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.49 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Second	       1	1004995127 ns/op	      64 B/op	       1 allocs/op
+	BenchmarkBaseOperate	2000000000	         0.55 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Second	       1	1000137511 ns/op	      64 B/op	       1 allocs/op
 
 run with
 
@@ -31,16 +44,16 @@ run with
 
 got
 
-	BenchmarkBaseOperate	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.49 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Second	2000000000	         1.00 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperate	2000000000	         0.55 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkBaseOperateSleep1Second	2000000000	         1.09 ns/op	       0 B/op	       0 allocs/op
 
 * base operate
 
 Lessions
 
 - default -benchtime is 1s, if one test spend one more a second, benchmark will test one time only
-- don't put large spend time operate in benchmark test, if need, put it on init or const.
+- don't put large cost operate in benchmark test func. If need, put it in init func or const.
 
 * call func spend
 
@@ -58,10 +71,10 @@ run with
 
 got
 
-	BenchmarkAddFuncCall	2000000000	         0.48 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddIntStructCall	2000000000	         1.79 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddStructCall	2000000000	         1.79 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddTwoStructCall	2000000000	         0.47 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddFuncCall	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddIntStructCall	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddStructCall	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkAddTwoStructCall	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
 
 * call func spend
 
@@ -137,12 +150,18 @@ run array iterator
 
 got
 
-	BenchmarkIteratorArrayFor	200000000	         8.24 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceFor	300000000	         5.84 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorArrayRange	200000000	         8.14 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceRange	300000000	         5.82 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorArrayRangeValue	200000000	         9.02 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceRangeValue	300000000	         5.07 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorArrayFor	200000000	         8.84 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceFor	200000000	         8.45 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorArrayRange	200000000	         8.96 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceRange	200000000	         8.28 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorArrayRangeValue	200000000	         8.27 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkIteratorSliceRangeValue	200000000	         8.05 ns/op	       0 B/op	       0 allocs/op
+
+
+* array and slice iterator
+
+- These three iterator cost is closed. But 'range value' method is faster then the others.
+- Iterator slice is faster than array.
 
 what's the different?
 
@@ -150,5 +169,6 @@ disassember code:
 
 	go tool 6g -S 03_array_iterator_test.go
 
-* array and slice iterator
+* reference
 
+- http://blog.golang.org/profiling-go-programs
