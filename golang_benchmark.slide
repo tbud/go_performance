@@ -161,13 +161,28 @@ got
 * array and slice iterator
 
 - These three iterator cost is closed. But 'range value' method is faster then the others.
-- Iterator slice is faster than array.
+- Slice iterator is faster than array.
 
 what's the different?
 
 disassember code:
 
 	go tool 6g -S 03_array_iterator_test.go
+
+
+* interface pack and unpack
+
+* new and make
+
+* defer
+
+* panic
+
+* buf reuse
+
+* goroutine
+
+* object pool
 
 * reference
 
