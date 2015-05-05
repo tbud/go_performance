@@ -55,7 +55,7 @@ Lessions
 - default -benchtime is 1s, if one test spend one more a second, benchmark will test one time only
 - don't put large cost operate in benchmark test func. If need, put it in init func or const.
 
-* call func spend
+* call func
 
 .code golang_benchmark/01_base_operate.go /func add/,/^}/
 
@@ -63,7 +63,7 @@ Lessions
 
 .code golang_benchmark/01_base_operate.go /type Add /,
 
-* call func spend
+* call func
 
 run with
 
@@ -76,7 +76,7 @@ got
 	BenchmarkAddStructCall	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
 	BenchmarkAddTwoStructCall	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
 
-* call func spend
+* call func
 
 disassember the code:
 
@@ -91,7 +91,7 @@ will be
 	0x0012 00018 (01_base_operate_test.go:11)	ADDQ	AX,CX
 	0x0015 00021 (01_base_operate_test.go:11)	NOP	,
 
-* call func spend
+* call func
 
 line 37
 
@@ -103,7 +103,7 @@ will be
 	0x0015 00021 (01_base_operate_test.go:37)	ADDQ	CX,BX
 	0x0018 00024 (01_base_operate_test.go:37)	MOVQ	BX,CX
 
-* call func spend
+* call func
 
 line 45
 
@@ -121,7 +121,7 @@ will be
 	0x002c 00044 (01_base_operate_test.go:45)	NOP	,
 
 
-* call func spend
+* call func
 
 Lessions
 
@@ -172,7 +172,28 @@ disassember code:
 
 * interface pack and unpack
 
+.code golang_benchmark/04_interface_pack_test.go /var intUnpackMap/,/var intPackInterfaceMap/
+
+.code golang_benchmark/04_interface_pack_test.go /BenchmarkInterfacePack/,/^}/
+
+.code golang_benchmark/04_interface_pack_test.go /BenchmarkInterfaceUnPack/,/^}/
+
+* interface pack and unpack
+
+got 
+
+	BenchmarkInterfaceIntPackBase	100000000	        11.8 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkInterfacePack	 3000000	       494 ns/op	      80 B/op	      10 allocs/op
+	BenchmarkInterfaceIntUnpackBase	200000000	         9.15 ns/op	       0 B/op	       0 allocs/op
+	BenchmarkInterfaceUnPack	20000000	       100 ns/op	       0 B/op	       0 allocs/op
+
+*LESSONS*
+
+- pack and unpack interface to base type cost expensive
+
 * new and make
+
+
 
 * defer
 

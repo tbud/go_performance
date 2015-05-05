@@ -23,7 +23,7 @@ func BenchmarkInterfaceIntPackBase(b *testing.B) {
 func BenchmarkInterfacePack(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			intPackInterfaceMap[i] = i
+			intPackInterfaceMap[i] = i // HL
 		}
 	}
 }
@@ -42,7 +42,7 @@ func BenchmarkInterfaceUnPack(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			sum += intUnpackInterfaceMap[i].(int)
+			sum += intUnpackInterfaceMap[i].(int) // HL
 		}
 	}
 	_ = sum
