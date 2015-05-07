@@ -31,7 +31,25 @@ func BenchmarkCreateMake(b *testing.B) {
 	}
 }
 
-func BenchmarkCreateMakeFixSize(b *testing.B) {
+func BenchmarkCreateMakePoint(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hl := []*hello{}
+		for i := 0; i < 10; i++ {
+			hl = append(hl, &hello{"world!"})
+		}
+	}
+}
+
+func BenchmarkCreateMakeArray(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hl := [10]hello{}
+		for i := 0; i < 10; i++ {
+			hl[i].message = "world!"
+		}
+	}
+}
+
+func BenchmarkCreateMakeSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := make([]hello, 10)
 		for i := 0; i < 10; i++ {
