@@ -32,7 +32,7 @@ func Benchmark05AppendInit(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := []hello{}
 		for i := 0; i < 10; i++ {
-			hl = append(hl, hello{"world!"})
+			hl = append(hl, hello{"world!"}) // HL
 		}
 	}
 }
@@ -60,6 +60,15 @@ func Benchmark05MakeFixedSlice(b *testing.B) {
 		hl := make([]hello, 10)
 		for i := 0; i < 10; i++ {
 			hl[i].message = "world!"
+		}
+	}
+}
+
+func Benchmark05MakeFixedSliceAndAppend(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hl := make([]*hello, 10)
+		for i := 0; i < 10; i++ {
+			hl = append(hl, &hello{"world!"})
 		}
 	}
 }

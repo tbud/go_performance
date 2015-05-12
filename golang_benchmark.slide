@@ -207,7 +207,8 @@ got
 	Benchmark05UseInitPointer	500000000	         3.54 ns/op	       0 B/op	       0 allocs/op
 	Benchmark05UseNew	500000000	         3.54 ns/op	       0 B/op	       0 allocs/op
 	Benchmark05AppendInit	 1000000	      1319 ns/op	     496 B/op	       5 allocs/op
-	Benchmark05InitFixedArray	30000000	        45.5 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05AppendInitPointer	 1000000	      1446 ns/op	     408 B/op	      15 allocs/op
+	Benchmark05InitFixedArray	30000000	        45.4 ns/op	       0 B/op	       0 allocs/op
 	Benchmark05MakeFixedSlice	30000000	        48.7 ns/op	       0 B/op	       0 allocs/op
 
 disassember code:
@@ -259,12 +260,73 @@ disassember code:
 
 * memory use
 
+.code golang_benchmark/05_new_make_test.go /Benchmark05AppendInit/,/^}/
 
 .code golang_benchmark/05_new_make_test.go /Benchmark05MakeFixedSlice/,/^}/
 
 * memory use
 
+0x006b 00107 (05_new_make_test.go:35)   LEAQ    "".autotmp_0014+80(SP),BX
+0x0070 00112 (05_new_make_test.go:35)   MOVQ    $0,(BX)
+0x0077 00119 (05_new_make_test.go:35)   MOVQ    $0,8(BX)
+0x007f 00127 (05_new_make_test.go:35)   LEAQ    "".autotmp_0014+80(SP),BX
+0x0084 00132 (05_new_make_test.go:35)   LEAQ    go.string."world!"+0(SB),BP
+0x008b 00139 (05_new_make_test.go:35)   MOVQ    BX,DI
+0x008e 00142 (05_new_make_test.go:35)   MOVQ    BP,SI
+0x0091 00145 (05_new_make_test.go:35)   MOVSQ   ,
+0x0093 00147 (05_new_make_test.go:35)   MOVSQ   ,
+0x0095 00149 (05_new_make_test.go:35)   MOVQ    DX,"".hl+96(SP)
+0x009a 00154 (05_new_make_test.go:35)   MOVQ    CX,"".hl+104(SP)
+0x009f 00159 (05_new_make_test.go:35)   MOVQ    R8,"".hl+112(SP)
+0x00a4 00164 (05_new_make_test.go:35)   MOVQ    R8,AX
+0x00a7 00167 (05_new_make_test.go:35)   MOVQ    R8,BX
+0x00aa 00170 (05_new_make_test.go:35)   SUBQ    CX,BX
+0x00ad 00173 (05_new_make_test.go:35)   CMPQ    BX,$1
+0x00b1 00177 (05_new_make_test.go:35)   JGE     ,255
+0x00b3 00179 (05_new_make_test.go:35)   MOVQ    $type.[]"".hello+0(SB),BX
+0x00ba 00186 (05_new_make_test.go:35)   MOVQ    BX,(SP)
+0x00be 00190 (05_new_make_test.go:35)   MOVQ    DX,"".autotmp_0015+120(SP)
+0x00c3 00195 (05_new_make_test.go:35)   MOVQ    DX,8(SP)
+0x00c8 00200 (05_new_make_test.go:35)   MOVQ    CX,"".autotmp_0015+128(SP)
+0x00d0 00208 (05_new_make_test.go:35)   MOVQ    CX,16(SP)
+0x00d5 00213 (05_new_make_test.go:35)   MOVQ    AX,"".autotmp_0015+136(SP)
+0x00dd 00221 (05_new_make_test.go:35)   MOVQ    AX,24(SP)
+0x00e2 00226 (05_new_make_test.go:35)   MOVQ    $1,32(SP)
+0x00eb 00235 (05_new_make_test.go:35)   PCDATA  $0,$1
+0x00eb 00235 (05_new_make_test.go:35)   CALL    ,runtime.growslice(SB)
+0x00f0 00240 (05_new_make_test.go:35)   MOVQ    40(SP),DX
+0x00f5 00245 (05_new_make_test.go:35)   MOVQ    48(SP),CX
+0x00fa 00250 (05_new_make_test.go:35)   MOVQ    56(SP),AX
+0x00ff 00255 (05_new_make_test.go:35)   MOVQ    CX,SI
+0x0102 00258 (05_new_make_test.go:35)   INCQ    ,SI
+0x0105 00261 (05_new_make_test.go:35)   MOVQ    SI,"".autotmp_0015+128(SP)
+0x010d 00269 (05_new_make_test.go:35)   MOVQ    AX,"".autotmp_0015+136(SP)
+0x0115 00277 (05_new_make_test.go:35)   MOVQ    DX,SI
+0x0118 00280 (05_new_make_test.go:35)   MOVQ    DX,"".autotmp_0015+120(SP)
+0x011d 00285 (05_new_make_test.go:35)   MOVQ    CX,DI
+0x0120 00288 (05_new_make_test.go:35)   IMULQ   $16,DI
+0x0124 00292 (05_new_make_test.go:35)   ADDQ    DI,SI
+0x0127 00295 (05_new_make_test.go:35)   MOVQ    SI,(SP)
+0x012b 00299 (05_new_make_test.go:35)   MOVQ    $0,8(SP)
+0x0134 00308 (05_new_make_test.go:35)   LEAQ    "".autotmp_0014+80(SP),SI
+0x0139 00313 (05_new_make_test.go:35)   LEAQ    16(SP),DI
+0x013e 00318 (05_new_make_test.go:35)   MOVSQ   ,
+0x0140 00320 (05_new_make_test.go:35)   MOVSQ   ,
+0x0142 00322 (05_new_make_test.go:35)   PCDATA  $0,$2
+0x0142 00322 (05_new_make_test.go:35)   CALL    ,runtime.writebarrierfat2(SB)
+0x0147 00327 (05_new_make_test.go:35)   MOVQ    "".i+72(SP),SI
+0x014c 00332 (05_new_make_test.go:35)   NOP     ,
+0x014c 00332 (05_new_make_test.go:35)   MOVQ    "".autotmp_0015+120(SP),DX
+0x0151 00337 (05_new_make_test.go:35)   MOVQ    "".autotmp_0015+128(SP),CX
+0x0159 00345 (05_new_make_test.go:35)   MOVQ    "".autotmp_0015+136(SP),R8
+0x0161 00353 (05_new_make_test.go:35)   NOP     ,
+
+* memory use
+
 *Lessons*
+
+- init pointer and new are equivalence
+- 
 
 
 * defer and panic
