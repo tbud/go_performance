@@ -3,6 +3,7 @@ package golang_benchmark
 import (
 	"errors"
 	"fmt"
+	"sync"
 	"testing"
 )
 
@@ -117,5 +118,38 @@ func Benchmark06NumberPanic(b *testing.B) {
 func Benchmark06StringPanic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		coverPanic(withStringPanic)
+	}
+}
+
+type LockTest struct {
+	sync.Mutex
+	a int
+}
+
+func (l *LockTest) get() (ret int) {
+	l.Lock()
+	ret = l.a
+	l.Unlock()
+	return
+}
+
+func (l *LockTest) getWithDefer() (ret int) {
+	defer l.Unlock()
+	l.Lock()
+	ret = l.a
+	return
+}
+
+func Benchmark06Lock(b *testing.B) {
+	l := &LockTest{}
+	for i := 0; i < b.N; i++ {
+		l.get()
+	}
+}
+
+func Benchmark06LockWithDefer(b *testing.B) {
+	l := &LockTest{}
+	for i := 0; i < b.N; i++ {
+		l.getWithDefer()
 	}
 }
