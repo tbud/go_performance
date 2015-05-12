@@ -1,6 +1,7 @@
 package golang_benchmark
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 )
@@ -19,12 +20,24 @@ func withDoubleDefer() {
 	withDefer()
 }
 
-func withoutDefer() {
+func normalCall() {
 
 }
 
-func withoutDeferTwo() {
-	withoutDefer()
+func normalDoubleCall() {
+	normalCall()
+}
+
+func Benchmark06NormalCall(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		normalCall()
+	}
+}
+
+func Benchmark06NormalDoubleCall(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		normalDoubleCall()
+	}
 }
 
 func Benchmark06Defer(b *testing.B) {
@@ -33,40 +46,10 @@ func Benchmark06Defer(b *testing.B) {
 	}
 }
 
-func Benchmark06WithoutDefer(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		withoutDefer()
-	}
-}
-
-func Benchmark06TwoDefer(b *testing.B) {
+func Benchmark06DoubleDefer(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		withDoubleDefer()
 	}
-}
-
-func Benchmark06WithoutTwoDefer(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		withoutDeferTwo()
-	}
-}
-
-func coverWithoutPanic() {
-	withoutPanic()
-}
-
-func withoutPanic() {
-
-}
-
-func coverNoPanic() {
-	defer func() {
-		if r := recover(); r != nil {
-
-		}
-	}()
-
-	withoutPanic()
 }
 
 func withNumberPanic() {
@@ -77,11 +60,21 @@ func withStringPanic() {
 	panic("hello world")
 }
 
-func withErrorPanic() {
+var err = fmt.Errorf("error")
+
+func withConstErrorPanic() {
+	panic(err)
+}
+
+func withNewErrorPanic() {
+	panic(errors.New("error"))
+}
+
+func withFmtErrorPanic() {
 	panic(fmt.Errorf("error"))
 }
 
-func coverWithPanic(f func()) {
+func coverPanic(f func()) {
 	defer func() {
 		if r := recover(); r != nil {
 
@@ -91,32 +84,38 @@ func coverWithPanic(f func()) {
 	f()
 }
 
+func Benchmark06CoverNoPanic(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		coverPanic(normalCall)
+	}
+}
+
+func Benchmark06ConstErrorPanic(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		coverPanic(withConstErrorPanic)
+	}
+}
+
+func Benchmark06NewErrorPanic(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		coverPanic(withNewErrorPanic)
+	}
+}
+
+func Benchmark06FmtErrorPanic(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		coverPanic(withFmtErrorPanic)
+	}
+}
+
 func Benchmark06NumberPanic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		coverWithPanic(withNumberPanic)
+		coverPanic(withNumberPanic)
 	}
 }
 
 func Benchmark06StringPanic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		coverWithPanic(withStringPanic)
-	}
-}
-
-func Benchmark06ErrorPanic(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		coverWithPanic(withErrorPanic)
-	}
-}
-
-func Benchmark06WithoutPanic(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		coverWithoutPanic()
-	}
-}
-
-func Benchmark06NoPanic(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		coverNoPanic()
+		coverPanic(withStringPanic)
 	}
 }

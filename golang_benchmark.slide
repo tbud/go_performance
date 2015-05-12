@@ -198,6 +198,15 @@ got
 
 * defer and panic
 
+	Benchmark06Defer	20000000	        92.3 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06WithoutDefer	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06TwoDefer	10000000	       200 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06WithoutTwoDefer	1000000000	         2.07 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06NumberPanic	10000000	       208 ns/op	       8 B/op	       1 allocs/op
+	Benchmark06StringPanic	10000000	       224 ns/op	      16 B/op	       1 allocs/op
+	Benchmark06ErrorPanic	 5000000	       355 ns/op	      21 B/op	       2 allocs/op
+	Benchmark06WithoutPanic	1000000000	         2.07 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06NoPanic	20000000	        95.8 ns/op	       0 B/op	       0 allocs/op
 
 * buf reuse
 
