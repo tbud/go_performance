@@ -9,13 +9,11 @@ import (
 
 func withDefer() {
 	defer func() {
-
 	}()
 }
 
 func withDoubleDefer() {
 	defer func() {
-
 	}()
 
 	withDefer()
@@ -28,6 +26,8 @@ func normalCall() {
 func normalDoubleCall() {
 	normalCall()
 }
+
+// normalDoubleCall end OMIT
 
 func Benchmark06NormalCall(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -75,13 +75,12 @@ func withFmtErrorPanic() {
 	panic(fmt.Errorf("error"))
 }
 
+// withFmtErrorPanic end OMIT
+
 func coverPanic(f func()) {
 	defer func() {
-		if r := recover(); r != nil {
-
-		}
+		_ = recover()
 	}()
-
 	f()
 }
 
@@ -102,6 +101,8 @@ func Benchmark06NewErrorPanic(b *testing.B) {
 		coverPanic(withNewErrorPanic)
 	}
 }
+
+// Benchmark06NewErrorPanic end OMIT
 
 func Benchmark06FmtErrorPanic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
@@ -136,9 +137,10 @@ func (l *LockTest) get() (ret int) {
 func (l *LockTest) getWithDefer() (ret int) {
 	defer l.Unlock()
 	l.Lock()
-	ret = l.a
-	return
+	return l.a
 }
+
+// getWithDefer end OMIT
 
 func Benchmark06Lock(b *testing.B) {
 	l := &LockTest{}

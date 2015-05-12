@@ -159,6 +159,8 @@ got
 
 * array and slice iterator
 
+*Lessions*
+
 - These three iterator cost is closed. But 'range value' method is faster then the others.
 - Slice iterator is faster than array.
 
@@ -190,7 +192,7 @@ got
 	Benchmark04GetIntSlice	200000000	         9.15 ns/op	       0 B/op	       0 allocs/op
 	Benchmark04GetPackedIntSlice	20000000	       102 ns/op	       0 B/op	       0 allocs/op
 
-*LESSONS*
+*Lessons*
 
 - pack base type (int) bring additional memory allocs
 - pack and unpack interface cost expensive
@@ -324,12 +326,33 @@ disassember code:
 	0x0159 00345 (05_new_make_test.go:35)   MOVQ    "".autotmp_0015+136(SP),R8
 	0x0161 00353 (05_new_make_test.go:35)   NOP     ,
 
+append call
+	 
+	runtime.growslice in runtime/slice.go
+	runtime.writebarrierfat2 in runtime/mgc0.go
+
 * memory use
 
 *Lessons*
 
 - init pointer and new are equivalence
 - append is huge expensive cost
+
+* defer and panic
+
+.code golang_benchmark/06_defer_and_panic_test.go /withDefer/,/normalDoubleCall end/
+
+* defer and panic
+
+.code golang_benchmark/06_defer_and_panic_test.go /withNumberPanic/,/withFmtErrorPanic end/
+
+* defer and panic
+
+.code golang_benchmark/06_defer_and_panic_test.go /coverPanic/,/Benchmark06NewErrorPanic end/
+
+* defer and panic
+
+.code golang_benchmark/06_defer_and_panic_test.go /type LockTest/,/getWithDefer end/
 
 * defer and panic
 
@@ -342,13 +365,22 @@ got
 	Benchmark06NormalCall	2000000000	         0.30 ns/op	       0 B/op	       0 allocs/op
 	Benchmark06NormalDoubleCall	1000000000	         2.07 ns/op	       0 B/op	       0 allocs/op
 	Benchmark06Defer	20000000	        93.1 ns/op	       0 B/op	       0 allocs/op
-	Benchmark06DoubleDefer	10000000	       195 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06DoubleDefer	10000000	       196 ns/op	       0 B/op	       0 allocs/op
 	Benchmark06CoverNoPanic	20000000	        96.0 ns/op	       0 B/op	       0 allocs/op
-	Benchmark06ConstErrorPanic	10000000	       157 ns/op	       0 B/op	       0 allocs/op
-	Benchmark06NewErrorPanic	10000000	       223 ns/op	      16 B/op	       1 allocs/op
-	Benchmark06FmtErrorPanic	 5000000	       364 ns/op	      21 B/op	       2 allocs/op
-	Benchmark06NumberPanic	10000000	       208 ns/op	       8 B/op	       1 allocs/op
+	Benchmark06ConstErrorPanic	10000000	       156 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06NewErrorPanic	10000000	       228 ns/op	      16 B/op	       1 allocs/op
+	Benchmark06FmtErrorPanic	 5000000	       359 ns/op	      21 B/op	       2 allocs/op
+	Benchmark06NumberPanic	10000000	       209 ns/op	       8 B/op	       1 allocs/op
 	Benchmark06StringPanic	10000000	       222 ns/op	      16 B/op	       1 allocs/op
+	Benchmark06Lock	100000000	        19.5 ns/op	       0 B/op	       0 allocs/op
+	Benchmark06LockWithDefer	20000000	       106 ns/op	       0 B/op	       0 allocs/op
+
+* defer and panic
+
+*Lessons*
+
+- defer and panic cost expensive
+- lock and unlock with defer bring large additional cost
 
 * buf reuse
 
