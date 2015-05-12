@@ -20,33 +20,33 @@ Default on centos, this feature is closed. Or you can disable via:
 
 use those 3 test case
 
-.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperate/,/^}/
+.code golang_benchmark/01_base_operate_test.go /Benchmark01NormalAdd/,/^}/
 
-.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperateSleep1Microsecond/,/^}/ 
+.code golang_benchmark/01_base_operate_test.go /Benchmark01Sleep1Microsecond/,/^}/ 
 
-.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperateSleep1Second/
+.code golang_benchmark/01_base_operate_test.go /Benchmark01Sleep1Second/
 
 * base operate
 
 run with
 
-	go test -bench BenchmarkBaseOperate -benchmem
+	go test -bench Benchmark01 -benchmem
 
 got
 
-	BenchmarkBaseOperate	2000000000	         0.55 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Second	       1	1000137511 ns/op	      64 B/op	       1 allocs/op
+	Benchmark01NormalAdd	2000000000	         0.54 ns/op	       0 B/op	       0 allocs/op
+	Benchmark01Sleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	Benchmark01Sleep1Second	       1	1000098061 ns/op	      64 B/op	       1 allocs/op
 
 run with
 
-	go test -bench BenchmarkBaseOperate -benchmem -benchtime 5s
+	go test -bench Benchmark01 -benchmem -benchtime 5s
 
 got
 
-	BenchmarkBaseOperate	2000000000	         0.55 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkBaseOperateSleep1Second	2000000000	         1.09 ns/op	       0 B/op	       0 allocs/op
+	Benchmark01NormalAdd	2000000000	         0.54 ns/op	       0 B/op	       0 allocs/op
+	Benchmark01Sleep1Microsecond	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	Benchmark01Sleep1Second	2000000000	         1.09 ns/op	       0 B/op	       0 allocs/op
 
 * base operate
 
@@ -55,41 +55,41 @@ Lessions
 - default -benchtime is 1s, if one test spend one more a second, benchmark will test one time only
 - don't put large cost operate in benchmark test func. If need, put it in init func or const.
 
-* call func
+* function call
 
-.code golang_benchmark/01_base_operate.go /func add/,/^}/
+.code golang_benchmark/02_func_call_test.go /func add/,/^}/
 
-.code golang_benchmark/01_base_operate.go /type AddInt/,/^}/
+.code golang_benchmark/02_func_call_test.go /type AddInt/,/^}/
 
-.code golang_benchmark/01_base_operate.go /type Add /,
+.code golang_benchmark/02_func_call_test.go /type Add /,/type Add end/
 
-* call func
+* function call
 
 run with
 
-	go test -bench BenchmarkAdd -benchmem
+	go test -bench Benchmark02 -benchmem
 
 got
 
-	BenchmarkAddFuncCall	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddIntStructCall	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddStructCall	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkAddTwoStructCall	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	Benchmark02CallAddFunc	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
+	Benchmark02CallPackedIntAdd	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
+	Benchmark02CallIntStructAdd	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
+	Benchmark02CallStructAddFunc	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
 
-* call func
+* function call
 
 disassember the code:
 
-	go tool 6g -S 01_base_operate_test.go 01_base_operate.go
+	go tool 6g -S 02_func_call_test.go
 
-line 11
+line 30
 
-.code golang_benchmark/01_base_operate_test.go /BenchmarkBaseOperate/,/^}/
+.code golang_benchmark/02_func_call_test.go /Benchmark02NormalAdd/,/^}/
 
 will be
 
-	0x0012 00018 (01_base_operate_test.go:11)	ADDQ	AX,CX
-	0x0015 00021 (01_base_operate_test.go:11)	NOP	,
+	0x0012 00018 (02_func_call_test.go:32)	ADDQ	AX,CX
+	0x0015 00021 (02_func_call_test.go:32)	NOP	,
 
 * call func
 

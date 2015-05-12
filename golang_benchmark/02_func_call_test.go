@@ -24,6 +24,16 @@ func (a *Add) addTwo(b int, c int) int {
 	return b + c
 }
 
+// type Add end OMIT
+
+func Benchmark02NormalAdd(b *testing.B) {
+	sum := 0
+	for i := 0; i < b.N; i++ {
+		sum += i // HL
+	}
+	_ = sum
+}
+
 func Benchmark02CallAddFunc(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
