@@ -37,6 +37,15 @@ func Benchmark05AppendInit(b *testing.B) {
 	}
 }
 
+func Benchmark05AppendInitPointer(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		hl := []*hello{}
+		for i := 0; i < 10; i++ {
+			hl = append(hl, &hello{"world!"})
+		}
+	}
+}
+
 func Benchmark05InitFixedArray(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := [10]hello{}

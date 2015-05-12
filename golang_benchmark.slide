@@ -203,12 +203,12 @@ run
 
 got
 
-	Benchmark05UseInit	500000000	         3.84 ns/op	       0 B/op	       0 allocs/op
-	Benchmark05UseNew	500000000	         3.84 ns/op	       0 B/op	       0 allocs/op
-	Benchmark05AppendInit	 1000000	      1307 ns/op	     496 B/op	       5 allocs/op
-	Benchmark05AppendInitPointer	 1000000	      1443 ns/op	     408 B/op	      15 allocs/op
-	Benchmark05InitFixedArray	30000000	        51.3 ns/op	       0 B/op	       0 allocs/op
-	Benchmark05MakeFixedSlice	30000000	        48.5 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05UseInit	500000000	         3.54 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05UseInitPointer	500000000	         3.54 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05UseNew	500000000	         3.54 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05AppendInit	 1000000	      1319 ns/op	     496 B/op	       5 allocs/op
+	Benchmark05InitFixedArray	30000000	        45.5 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05MakeFixedSlice	30000000	        48.7 ns/op	       0 B/op	       0 allocs/op
 
 disassember code:
 
@@ -216,46 +216,46 @@ disassember code:
 
 * memory use
 
-.code golang_benchmark/05_new_make_test.go /Benchmark05UseInit/,/^}/
+.code golang_benchmark/05_new_make_test.go /Benchmark05UseInitPointer/,/^}/
 
-	0x0014 00020 (05_new_make_test.go:13)   LEAQ    "".autotmp_0002+0(SP),BX
-	0x0018 00024 (05_new_make_test.go:13)   MOVQ    $0,(BX)
-	0x001f 00031 (05_new_make_test.go:13)   MOVQ    $0,8(BX)
-	0x0027 00039 (05_new_make_test.go:13)   LEAQ    "".autotmp_0002+0(SP),BX
-	0x002b 00043 (05_new_make_test.go:13)   MOVQ    BX,CX
-	0x002e 00046 (05_new_make_test.go:13)   CMPQ    BX,$0
-	0x0032 00050 (05_new_make_test.go:13)   JEQ     $1,89
-	0x0034 00052 (05_new_make_test.go:13)   LEAQ    (BX),BP
-	0x0037 00055 (05_new_make_test.go:13)   LEAQ    go.string."world!"+0(SB),BX
-	0x003e 00062 (05_new_make_test.go:13)   MOVQ    BP,DI
-	0x0041 00065 (05_new_make_test.go:13)   MOVQ    BX,SI
-	0x0044 00068 (05_new_make_test.go:13)   MOVSQ   ,
-	0x0046 00070 (05_new_make_test.go:13)   MOVSQ   ,
+	0x0014 00020 (05_new_make_test.go:19)   LEAQ    "".autotmp_0002+0(SP),BX
+	0x0018 00024 (05_new_make_test.go:19)   MOVQ    $0,(BX)
+	0x001f 00031 (05_new_make_test.go:19)   MOVQ    $0,8(BX)
+	0x0027 00039 (05_new_make_test.go:19)   LEAQ    "".autotmp_0002+0(SP),BX
+	0x002b 00043 (05_new_make_test.go:19)   MOVQ    BX,CX
+	0x002e 00046 (05_new_make_test.go:19)   CMPQ    BX,$0
+	0x0032 00050 (05_new_make_test.go:19)   JEQ     $1,89
+	0x0034 00052 (05_new_make_test.go:19)   LEAQ    (BX),BP
+	0x0037 00055 (05_new_make_test.go:19)   LEAQ    go.string."world!"+0(SB),BX
+	0x003e 00062 (05_new_make_test.go:19)   MOVQ    BP,DI
+	0x0041 00065 (05_new_make_test.go:19)   MOVQ    BX,SI
+	0x0044 00068 (05_new_make_test.go:19)   MOVSQ   ,
+	0x0046 00070 (05_new_make_test.go:19)   MOVSQ   ,
 
-	0x0059 00089 (05_new_make_test.go:13)   MOVL    AX,(BX)
-	0x005b 00091 (05_new_make_test.go:13)   JMP     ,52
+	0x0059 00089 (05_new_make_test.go:19)   MOVL    AX,(BX)
+	0x005b 00091 (05_new_make_test.go:19)   JMP     ,52
 
 * memory use
 
 .code golang_benchmark/05_new_make_test.go /Benchmark05UseNew/,/^}/
 
-	0x0014 00020 (05_new_make_test.go:19)   LEAQ    "".autotmp_0005+0(SP),BX
-	0x0018 00024 (05_new_make_test.go:19)   MOVQ    $0,(BX)
-	0x001f 00031 (05_new_make_test.go:19)   MOVQ    $0,8(BX)
-	0x0027 00039 (05_new_make_test.go:19)   LEAQ    "".autotmp_0005+0(SP),BX
-	0x002b 00043 (05_new_make_test.go:19)   MOVQ    BX,CX
-	0x002e 00046 (05_new_make_test.go:19)   NOP     ,
-	0x002e 00046 (05_new_make_test.go:20)   CMPQ    BX,$0
-	0x0032 00050 (05_new_make_test.go:20)   JEQ     $1,89
-	0x0034 00052 (05_new_make_test.go:20)   LEAQ    (BX),BP
-	0x0037 00055 (05_new_make_test.go:20)   LEAQ    go.string."world!"+0(SB),BX
-	0x003e 00062 (05_new_make_test.go:20)   MOVQ    BP,DI
-	0x0041 00065 (05_new_make_test.go:20)   MOVQ    BX,SI
-	0x0044 00068 (05_new_make_test.go:20)   MOVSQ   ,
-	0x0046 00070 (05_new_make_test.go:20)   MOVSQ   ,
+	0x0014 00020 (05_new_make_test.go:25)   LEAQ    "".autotmp_0005+0(SP),BX
+	0x0018 00024 (05_new_make_test.go:25)   MOVQ    $0,(BX)
+	0x001f 00031 (05_new_make_test.go:25)   MOVQ    $0,8(BX)
+	0x0027 00039 (05_new_make_test.go:25)   LEAQ    "".autotmp_0005+0(SP),BX
+	0x002b 00043 (05_new_make_test.go:25)   MOVQ    BX,CX
+	0x002e 00046 (05_new_make_test.go:25)   NOP     ,
+	0x002e 00046 (05_new_make_test.go:26)   CMPQ    BX,$0
+	0x0032 00050 (05_new_make_test.go:26)   JEQ     $1,89
+	0x0034 00052 (05_new_make_test.go:26)   LEAQ    (BX),BP
+	0x0037 00055 (05_new_make_test.go:26)   LEAQ    go.string."world!"+0(SB),BX
+	0x003e 00062 (05_new_make_test.go:26)   MOVQ    BP,DI
+	0x0041 00065 (05_new_make_test.go:26)   MOVQ    BX,SI
+	0x0044 00068 (05_new_make_test.go:26)   MOVSQ   ,
+	0x0046 00070 (05_new_make_test.go:26)   MOVSQ   ,
 
-	0x0059 00089 (05_new_make_test.go:20)   MOVL    AX,(BX)
-	0x005b 00091 (05_new_make_test.go:20)   JMP     ,52
+	0x0059 00089 (05_new_make_test.go:26)   MOVL    AX,(BX)
+	0x005b 00091 (05_new_make_test.go:26)   JMP     ,52
 
 * memory use
 
