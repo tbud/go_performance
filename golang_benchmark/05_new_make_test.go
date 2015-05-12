@@ -8,13 +8,13 @@ type hello struct {
 	message string
 }
 
-func BenchmarkCreateInit(b *testing.B) {
+func Benchmark05UseInit(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		_ = &hello{"world!"}
 	}
 }
 
-func BenchmarkCreateNew(b *testing.B) {
+func Benchmark05UseNew(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		h := new(hello)
 		h.message = "world!"
@@ -22,7 +22,7 @@ func BenchmarkCreateNew(b *testing.B) {
 	}
 }
 
-func BenchmarkCreateMake(b *testing.B) {
+func Benchmark05AppendInit(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := []hello{}
 		for i := 0; i < 10; i++ {
@@ -31,7 +31,7 @@ func BenchmarkCreateMake(b *testing.B) {
 	}
 }
 
-func BenchmarkCreateMakePoint(b *testing.B) {
+func Benchmark05AppendInitPointer(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := []*hello{}
 		for i := 0; i < 10; i++ {
@@ -40,7 +40,7 @@ func BenchmarkCreateMakePoint(b *testing.B) {
 	}
 }
 
-func BenchmarkCreateMakeArray(b *testing.B) {
+func Benchmark05InitFixedArray(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := [10]hello{}
 		for i := 0; i < 10; i++ {
@@ -49,7 +49,7 @@ func BenchmarkCreateMakeArray(b *testing.B) {
 	}
 }
 
-func BenchmarkCreateMakeSlice(b *testing.B) {
+func Benchmark05MakeFixedSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		hl := make([]hello, 10)
 		for i := 0; i < 10; i++ {

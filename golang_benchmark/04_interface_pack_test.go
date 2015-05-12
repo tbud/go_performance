@@ -4,45 +4,45 @@ import (
 	"testing"
 )
 
-var intUnpackMap = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+var constIntSlice = []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-var intUnpackInterfaceMap = []interface{}{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+var constPackedIntSlice = []interface{}{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 
-var intPackMap = make([]int, 10)
+var intSlice = make([]int, 10)
 
-var intPackInterfaceMap = make([]interface{}, 10)
+var packedIntSlice = make([]interface{}, 10)
 
-func BenchmarkInterfaceIntPackBase(b *testing.B) {
+func Benchmark04SetIntSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			intPackMap[i] = i
+			intSlice[i] = i
 		}
 	}
 }
 
-func BenchmarkInterfacePack(b *testing.B) {
+func Benchmark04SetPackedIntSlice(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			intPackInterfaceMap[i] = i // HL
+			packedIntSlice[i] = i // HL
 		}
 	}
 }
 
-func BenchmarkInterfaceIntUnpackBase(b *testing.B) {
+func Benchmark04GetIntSlice(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			sum += intUnpackMap[i]
+			sum += constIntSlice[i]
 		}
 	}
 	_ = sum
 }
 
-func BenchmarkInterfaceUnPack(b *testing.B) {
+func Benchmark04GetPackedIntSlice(b *testing.B) {
 	sum := 0
 	for i := 0; i < b.N; i++ {
 		for i := 0; i < 10; i++ {
-			sum += intUnpackInterfaceMap[i].(int) // HL
+			sum += constPackedIntSlice[i].(int) // HL
 		}
 	}
 	_ = sum
