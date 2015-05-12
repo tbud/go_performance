@@ -68,6 +68,16 @@ func coverWithPanic() {
 	withPanic()
 }
 
+func coverNoPanic() {
+	defer func() {
+		if r := recover(); r != nil {
+
+		}
+	}()
+
+	withoutPanic()
+}
+
 func withPanic() {
 	panic(1)
 }
@@ -81,5 +91,11 @@ func Benchmark06Panic(b *testing.B) {
 func Benchmark06WithoutPanic(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		coverWithoutPanic()
+	}
+}
+
+func Benchmark06NoPanic(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		coverNoPanic()
 	}
 }

@@ -196,9 +196,8 @@ got
 
 
 
-* defer
+* defer and panic
 
-* panic
 
 * buf reuse
 
