@@ -71,6 +71,7 @@ run with
 
 got
 
+	Benchmark02NormalAdd	2000000000	         0.54 ns/op	       0 B/op	       0 allocs/op
 	Benchmark02CallAddFunc	2000000000	         0.59 ns/op	       0 B/op	       0 allocs/op
 	Benchmark02CallPackedIntAdd	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
 	Benchmark02CallIntStructAdd	2000000000	         1.77 ns/op	       0 B/op	       0 allocs/op
@@ -82,46 +83,45 @@ disassember the code:
 
 	go tool 6g -S 02_func_call_test.go
 
-line 30
+line 32
 
 .code golang_benchmark/02_func_call_test.go /Benchmark02NormalAdd/,/^}/
 
 will be
 
-	0x0012 00018 (02_func_call_test.go:32)	ADDQ	AX,CX
-	0x0015 00021 (02_func_call_test.go:32)	NOP	,
+	0x0012 00018 (02_func_call_test.go:32)  ADDQ    AX,CX
+	0x0015 00021 (02_func_call_test.go:32)  NOP     ,
 
-* call func
+* function call
 
-line 37
+line 40
 
-.code golang_benchmark/01_base_operate_test.go /BenchmarkAddFuncCall/,/^}/
-
-will be
-
-	0x0012 00018 (01_base_operate_test.go:37)	MOVQ	AX,BX
-	0x0015 00021 (01_base_operate_test.go:37)	ADDQ	CX,BX
-	0x0018 00024 (01_base_operate_test.go:37)	MOVQ	BX,CX
-
-* call func
-
-line 45
-
-.code golang_benchmark/01_base_operate_test.go /BenchmarkAddIntStructCall/,/^}/
+.code golang_benchmark/02_func_call_test.go /Benchmark02CallAddFunc/,/^}/
 
 will be
 
-	0x001c 00028 (01_base_operate_test.go:45)	LEAQ	"".s+0(SP),BX
-	0x0020 00032 (01_base_operate_test.go:45)	NOP	,
-	0x0020 00032 (01_base_operate_test.go:45)	MOVQ	(BX),DX
-	0x0023 00035 (01_base_operate_test.go:45)	NOP	,
-	0x0023 00035 (01_base_operate_test.go:45)	MOVQ	AX,BP
-	0x0026 00038 (01_base_operate_test.go:45)	ADDQ	DX,BP
-	0x0029 00041 (01_base_operate_test.go:45)	MOVQ	BP,(BX)
-	0x002c 00044 (01_base_operate_test.go:45)	NOP	,
+	0x0012 00018 (02_func_call_test.go:40)  MOVQ    AX,BX
+	0x0015 00021 (02_func_call_test.go:40)  ADDQ    CX,BX
+	0x0018 00024 (02_func_call_test.go:40)  MOVQ    BX,CX	
 
+* function call
 
-* call func
+line 48
+
+.code golang_benchmark/01_base_operate_test.go /Benchmark02CallPackedIntAdd/,/^}/
+
+will be
+
+	0x001c 00028 (02_func_call_test.go:48)  LEAQ    "".s+0(SP),BX
+	0x0020 00032 (02_func_call_test.go:48)  NOP     ,
+	0x0020 00032 (02_func_call_test.go:48)  MOVQ    (BX),DX
+	0x0023 00035 (02_func_call_test.go:48)  NOP     ,
+	0x0023 00035 (02_func_call_test.go:48)  MOVQ    AX,BP
+	0x0026 00038 (02_func_call_test.go:48)  ADDQ    DX,BP
+	0x0029 00041 (02_func_call_test.go:48)  MOVQ    BP,(BX)
+	0x002c 00044 (02_func_call_test.go:48)  NOP     ,	
+
+* function call
 
 Lessions
 
