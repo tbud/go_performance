@@ -50,7 +50,7 @@ got
 
 * base operate
 
-Lessions
+*Lessions*
 
 - default -benchtime is 1s, if one test spend one more a second, benchmark will test one time only
 - don't put large cost operate in benchmark test func. If need, put it in init func or const.
@@ -108,7 +108,7 @@ will be
 
 line 48
 
-.code golang_benchmark/01_base_operate_test.go /Benchmark02CallPackedIntAdd/,/^}/
+.code golang_benchmark/02_func_call_test.go /Benchmark02CallPackedIntAdd/,/^}/
 
 will be
 
@@ -123,7 +123,7 @@ will be
 
 * function call
 
-Lessions
+*Lessions*
 
 - simple func call will be inline
 - wrap base type to program object-oriented bring large cost
@@ -132,31 +132,30 @@ Lessions
 
 i use three kind of iterator to iterator array and slice
 
-.code golang_benchmark/03_array_iterator_test.go /var iarray/,/var islice/
+.code golang_benchmark/03_iterator_test.go /var iarray/,/var islice/
 
-.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArray/,/^}/
+.code golang_benchmark/03_iterator_test.go /Benchmark03ArrayForIterator/,/^}/
 
 * array and slice iterator
 
-.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArrayRange/,/^}/
+.code golang_benchmark/03_iterator_test.go /Benchmark03ArrayRangeIterator/,/^}/
 
-.code golang_benchmark/03_array_iterator_test.go /BenchmarkIteratorArrayRangeValue/,/^}/
+.code golang_benchmark/03_iterator_test.go /Benchmark03ArrayRangeValueIterator/,/^}/
 
 * array and slice iterator
 
 run array iterator
 
-	go test -bench BenchmarkIterator -benchmem
+	go test -bench Benchmark03 -benchmem
 
 got
 
-	BenchmarkIteratorArrayFor	200000000	         8.84 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceFor	200000000	         8.45 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorArrayRange	200000000	         8.96 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceRange	200000000	         8.28 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorArrayRangeValue	200000000	         8.27 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkIteratorSliceRangeValue	200000000	         8.05 ns/op	       0 B/op	       0 allocs/op
-
+	Benchmark03ArrayForIterator	200000000	         8.44 ns/op	       0 B/op	       0 allocs/op
+	Benchmark03SliceForIterator	200000000	         8.93 ns/op	       0 B/op	       0 allocs/op
+	Benchmark03ArrayRangeIterator	200000000	         8.40 ns/op	       0 B/op	       0 allocs/op
+	Benchmark03SliceRangeIterator	200000000	         8.93 ns/op	       0 B/op	       0 allocs/op
+	Benchmark03ArrayRangeValueIterator	100000000	        10.6 ns/op	       0 B/op	       0 allocs/op
+	Benchmark03SliceRangeValueIterator	300000000	         5.81 ns/op	       0 B/op	       0 allocs/op
 
 * array and slice iterator
 
@@ -167,33 +166,105 @@ what's the different?
 
 disassember code:
 
-	go tool 6g -S 03_array_iterator_test.go
+	go tool 6g -S 03_iterator_test.go
 
 
 * interface pack and unpack
 
-.code golang_benchmark/04_interface_pack_test.go /var intUnpackMap/,/var intPackInterfaceMap/
+.code golang_benchmark/04_interface_pack_test.go /var constIntSlice/,/var packedIntSlice/
 
-.code golang_benchmark/04_interface_pack_test.go /BenchmarkInterfacePack/,/^}/
+.code golang_benchmark/04_interface_pack_test.go /Benchmark04SetPackedIntSlice/,/^}/
 
-.code golang_benchmark/04_interface_pack_test.go /BenchmarkInterfaceUnPack/,/^}/
+.code golang_benchmark/04_interface_pack_test.go /Benchmark04GetPackedIntSlice/,/^}/
 
 * interface pack and unpack
+
+run
+
+	go test -bench Benchmark04 -benchmem
 
 got 
 
-	BenchmarkInterfaceIntPackBase	100000000	        11.8 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkInterfacePack	 3000000	       494 ns/op	      80 B/op	      10 allocs/op
-	BenchmarkInterfaceIntUnpackBase	200000000	         9.15 ns/op	       0 B/op	       0 allocs/op
-	BenchmarkInterfaceUnPack	20000000	       100 ns/op	       0 B/op	       0 allocs/op
+	Benchmark04SetIntSlice	100000000	        11.8 ns/op	       0 B/op	       0 allocs/op
+	Benchmark04SetPackedIntSlice	 3000000	       488 ns/op	      80 B/op	      10 allocs/op
+	Benchmark04GetIntSlice	200000000	         9.15 ns/op	       0 B/op	       0 allocs/op
+	Benchmark04GetPackedIntSlice	20000000	       102 ns/op	       0 B/op	       0 allocs/op
 
 *LESSONS*
 
-- pack and unpack interface to base type cost expensive
+- pack base type (int) bring additional memory allocs
+- pack and unpack interface cost expensive
 
-* new and make
+* memory use
+
+run
+
+	go test -bench Benchmark05 -benchmem
+
+got
+
+	Benchmark05UseInit	500000000	         3.84 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05UseNew	500000000	         3.84 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05AppendInit	 1000000	      1307 ns/op	     496 B/op	       5 allocs/op
+	Benchmark05AppendInitPointer	 1000000	      1443 ns/op	     408 B/op	      15 allocs/op
+	Benchmark05InitFixedArray	30000000	        51.3 ns/op	       0 B/op	       0 allocs/op
+	Benchmark05MakeFixedSlice	30000000	        48.5 ns/op	       0 B/op	       0 allocs/op
+
+disassember code:
+
+	go tool 6g -S 05_new_make_test.go
+
+* memory use
+
+.code golang_benchmark/05_new_make_test.go /Benchmark05UseInit/,/^}/
+
+	0x0014 00020 (05_new_make_test.go:13)   LEAQ    "".autotmp_0002+0(SP),BX
+	0x0018 00024 (05_new_make_test.go:13)   MOVQ    $0,(BX)
+	0x001f 00031 (05_new_make_test.go:13)   MOVQ    $0,8(BX)
+	0x0027 00039 (05_new_make_test.go:13)   LEAQ    "".autotmp_0002+0(SP),BX
+	0x002b 00043 (05_new_make_test.go:13)   MOVQ    BX,CX
+	0x002e 00046 (05_new_make_test.go:13)   CMPQ    BX,$0
+	0x0032 00050 (05_new_make_test.go:13)   JEQ     $1,89
+	0x0034 00052 (05_new_make_test.go:13)   LEAQ    (BX),BP
+	0x0037 00055 (05_new_make_test.go:13)   LEAQ    go.string."world!"+0(SB),BX
+	0x003e 00062 (05_new_make_test.go:13)   MOVQ    BP,DI
+	0x0041 00065 (05_new_make_test.go:13)   MOVQ    BX,SI
+	0x0044 00068 (05_new_make_test.go:13)   MOVSQ   ,
+	0x0046 00070 (05_new_make_test.go:13)   MOVSQ   ,
+
+	0x0059 00089 (05_new_make_test.go:13)   MOVL    AX,(BX)
+	0x005b 00091 (05_new_make_test.go:13)   JMP     ,52
+
+* memory use
+
+.code golang_benchmark/05_new_make_test.go /Benchmark05UseNew/,/^}/
+
+	0x0014 00020 (05_new_make_test.go:19)   LEAQ    "".autotmp_0005+0(SP),BX
+	0x0018 00024 (05_new_make_test.go:19)   MOVQ    $0,(BX)
+	0x001f 00031 (05_new_make_test.go:19)   MOVQ    $0,8(BX)
+	0x0027 00039 (05_new_make_test.go:19)   LEAQ    "".autotmp_0005+0(SP),BX
+	0x002b 00043 (05_new_make_test.go:19)   MOVQ    BX,CX
+	0x002e 00046 (05_new_make_test.go:19)   NOP     ,
+	0x002e 00046 (05_new_make_test.go:20)   CMPQ    BX,$0
+	0x0032 00050 (05_new_make_test.go:20)   JEQ     $1,89
+	0x0034 00052 (05_new_make_test.go:20)   LEAQ    (BX),BP
+	0x0037 00055 (05_new_make_test.go:20)   LEAQ    go.string."world!"+0(SB),BX
+	0x003e 00062 (05_new_make_test.go:20)   MOVQ    BP,DI
+	0x0041 00065 (05_new_make_test.go:20)   MOVQ    BX,SI
+	0x0044 00068 (05_new_make_test.go:20)   MOVSQ   ,
+	0x0046 00070 (05_new_make_test.go:20)   MOVSQ   ,
+
+	0x0059 00089 (05_new_make_test.go:20)   MOVL    AX,(BX)
+	0x005b 00091 (05_new_make_test.go:20)   JMP     ,52
+
+* memory use
 
 
+.code golang_benchmark/05_new_make_test.go /Benchmark05MakeFixedSlice/,/^}/
+
+* memory use
+
+*Lessons*
 
 
 * defer and panic
