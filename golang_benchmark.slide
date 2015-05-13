@@ -382,12 +382,31 @@ got
 - defer and panic cost expensive
 - lock and unlock with defer bring large additional cost
 
-* buf reuse
+* buf reuse and object pool
+
+
 
 * goroutine
-
-* object pool
 
 * reference
 
 - http://blog.golang.org/profiling-go-programs
+- https://blog.cloudflare.com/recycling-memory-buffers-in-go
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
