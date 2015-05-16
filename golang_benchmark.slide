@@ -384,10 +384,29 @@ got
 
 * buf reuse and object pool
 
+run:
 
+	go test -bench Benchmark07 -benchmem -benchtime 5s
+
+got:
+
+	Benchmark07NormalMake	   10000	    904701 ns/op	 7504896 B/op	       1 allocs/op
+	Benchmark07ChanReuse	50000000	       160 ns/op	       3 B/op	       0 allocs/op
+	Benchmark07PoolReuse	50000000	       155 ns/op	      32 B/op	       1 allocs/op
+
+run:
+
+	go test -bench Benchmark07 -benchmem -benchtime 5ms
+
+got:
+
+	Benchmark07NormalMake	     100	    898520 ns/op	 7495106 B/op	       1 allocs/op
+	Benchmark07ChanReuse	      10	    793002 ns/op	 6792009 B/op	       1 allocs/op
+	Benchmark07PoolReuse	   50000	       170 ns/op	     228 B/op	       1 allocs/op
 
 * buf reuse and object pool
 
+- reuse object use pool is best
 
 * goroutine
 
