@@ -408,7 +408,33 @@ got:
 
 - reuse object use pool is best
 
-* goroutine
+* goroutine and goroutine pool
+
+goroutine without pool
+
+.code golang_benchmark/08_goroutine_test.go /Benchmark08CreateGotine/,/^}/
+
+* goroutine and goroutine pool
+
+goroutine with pool
+
+.code golang_benchmark/08_goroutine_test.go /Benchmark08ReturnWithChan/,/^}/
+
+* goroutine and goroutine pool
+
+goroutine with pool
+
+.code golang_benchmark/08_goroutine_test.go /workerGlobInt/,/^}/
+
+* goroutine and goroutine pool
+
+run:
+
+	go test -bench Benchmark08 -benchmem -benchtime 5s
+
+got:
+
+	
 
 * reference
 

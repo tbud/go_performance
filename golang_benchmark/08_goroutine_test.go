@@ -13,6 +13,31 @@ func Benchmark08Normal(b *testing.B) {
 	println(sum)
 }
 
+func workerCreateGotine(iCh int, wg *sync.WaitGroup) {
+	// Decreasing internal counter for wait-group as soon as goroutine finishes
+	defer wg.Done()
+
+	globInt.Lock()
+	globInt.sum += iCh
+	globInt.Unlock()
+}
+
+func Benchmark08CreateGotine(b *testing.B) {
+	globInt.sum = 0
+	wg := new(sync.WaitGroup)
+
+	// Adding routines to workgroup and running then
+	for i := 0; i < b.N; i++ {
+		wg.Add(1)
+		go workerCreateGotine(i, wg)
+	}
+
+	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
+	wg.Wait()
+
+	println(globInt.sum)
+}
+
 func workerReturnChan(iCh chan int, wg *sync.WaitGroup, ret chan int) {
 	// Decreasing internal counter for wait-group as soon as goroutine finishes
 	defer wg.Done()
@@ -96,31 +121,6 @@ func Benchmark08ReturnWithGlob(b *testing.B) {
 
 	// Closing channel (waiting in goroutines won't continue any more)
 	close(iCh)
-
-	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
-	wg.Wait()
-
-	println(globInt.sum)
-}
-
-func workerCreateGotine(iCh int, wg *sync.WaitGroup) {
-	// Decreasing internal counter for wait-group as soon as goroutine finishes
-	defer wg.Done()
-
-	globInt.Lock()
-	globInt.sum += iCh
-	globInt.Unlock()
-}
-
-func Benchmark08CreateGotine(b *testing.B) {
-	globInt.sum = 0
-	wg := new(sync.WaitGroup)
-
-	// Adding routines to workgroup and running then
-	for i := 0; i < b.N; i++ {
-		wg.Add(1)
-		go workerCreateGotine(i, wg)
-	}
 
 	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
 	wg.Wait()
