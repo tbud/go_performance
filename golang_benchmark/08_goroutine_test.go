@@ -10,7 +10,7 @@ func Benchmark08Normal(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		sum += i
 	}
-	println(sum)
+	// println(sum)
 }
 
 func workerCreateGotine(iCh int, wg *sync.WaitGroup) {
@@ -35,7 +35,7 @@ func Benchmark08CreateGotine(b *testing.B) {
 	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
 	wg.Wait()
 
-	println(globInt.sum)
+	// println(globInt.sum)
 }
 
 func workerReturnChan(iCh chan int, wg *sync.WaitGroup, ret chan int) {
@@ -80,7 +80,7 @@ func Benchmark08ReturnWithChan(b *testing.B) {
 		sum += <-iRet
 	}
 
-	println(sum)
+	// println(sum)
 }
 
 var globInt = struct {
@@ -125,5 +125,5 @@ func Benchmark08ReturnWithGlob(b *testing.B) {
 	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
 	wg.Wait()
 
-	println(globInt.sum)
+	// println(globInt.sum)
 }
