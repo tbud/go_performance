@@ -58,28 +58,21 @@ func Benchmark08ReturnWithChan(b *testing.B) {
 	wg := new(sync.WaitGroup)
 	iRet := make(chan int, GoRoutineNum)
 
-	// Adding routines to workgroup and running then
 	for i := 0; i < GoRoutineNum; i++ {
 		wg.Add(1)
 		go workerReturnChan(iCh, wg, iRet)
 	}
 
-	// Processing all links by spreading them to `free` goroutines
 	for i := 0; i < b.N; i++ {
 		iCh <- i
 	}
-
-	// Closing channel (waiting in goroutines won't continue any more)
-	close(iCh)
-
-	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
-	wg.Wait()
+	close(iCh) // Closing channel (waiting in goroutines won't continue any more)
+	wg.Wait()  // Waiting for all goroutines to finish (otherwise they die as main routine dies)
 
 	sum := 0
 	for i := 0; i < GoRoutineNum; i++ {
 		sum += <-iRet
 	}
-
 	// println(sum)
 }
 
@@ -108,22 +101,17 @@ func Benchmark08ReturnWithGlob(b *testing.B) {
 	iCh := make(chan int)
 	wg := new(sync.WaitGroup)
 
-	// Adding routines to workgroup and running then
 	for i := 0; i < GoRoutineNum; i++ {
 		wg.Add(1)
 		go workerGlobInt(iCh, wg)
 	}
 
-	// Processing all links by spreading them to `free` goroutines
 	for i := 0; i < b.N; i++ {
 		iCh <- i
 	}
 
-	// Closing channel (waiting in goroutines won't continue any more)
-	close(iCh)
-
-	// Waiting for all goroutines to finish (otherwise they die as main routine dies)
-	wg.Wait()
+	close(iCh) // Closing channel (waiting in goroutines won't continue any more)
+	wg.Wait()  // Waiting for all goroutines to finish (otherwise they die as main routine dies)
 
 	// println(globInt.sum)
 }

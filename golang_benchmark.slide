@@ -424,7 +424,7 @@ goroutine with pool
 
 goroutine with pool
 
-.code golang_benchmark/08_goroutine_test.go /workerGlobInt/,/^}/
+.code golang_benchmark/08_goroutine_test.go /Benchmark08ReturnWithGlob/,/^}/
 
 * goroutine and goroutine pool
 
@@ -434,7 +434,14 @@ run:
 
 got:
 
-	
+	Benchmark08Normal	2000000000	         0.55 ns/op	       0 B/op	       0 allocs/op
+	Benchmark08CreateGotine	10000000	       685 ns/op	       0 B/op	       0 allocs/op
+	Benchmark08ReturnWithChan	30000000	       257 ns/op	       0 B/op	       0 allocs/op
+	Benchmark08ReturnWithGlob	30000000	       254 ns/op	       0 B/op	       0 allocs/op
+
+* goroutine and goroutine pool
+
+- it is best to use goroutine pool
 
 * reference
 
