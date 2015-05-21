@@ -7,6 +7,7 @@ package golang_benchmark
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	fflib "github.com/pquerna/ffjson/fflib/v1"
 )
@@ -26,6 +27,13 @@ func (mj *Hello) MarshalJSONBuf(buf fflib.EncodingBuffer) error {
 	_ = err
 	buf.WriteString(`{"Message":`)
 	fflib.WriteJsonString(buf, string(mj.Message))
+	buf.WriteString(`,"Num":`)
+	fflib.FormatBits2(buf, uint64(mj.Num), 10, mj.Num < 0)
+	if mj.Created {
+		buf.WriteString(`,"Created":true`)
+	} else {
+		buf.WriteString(`,"Created":false`)
+	}
 	buf.WriteByte('}')
 	return nil
 }
@@ -35,9 +43,17 @@ const (
 	ffj_t_Hellono_such_key
 
 	ffj_t_Hello_Message
+
+	ffj_t_Hello_Num
+
+	ffj_t_Hello_Created
 )
 
 var ffj_key_Hello_Message = []byte("Message")
+
+var ffj_key_Hello_Num = []byte("Num")
+
+var ffj_key_Hello_Created = []byte("Created")
 
 func (uj *Hello) UnmarshalJSON(input []byte) error {
 	fs := fflib.NewFFLexer(input)
@@ -98,6 +114,14 @@ mainparse:
 			} else {
 				switch kn[0] {
 
+				case 'C':
+
+					if bytes.Equal(ffj_key_Hello_Created, kn) {
+						currentKey = ffj_t_Hello_Created
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
 				case 'M':
 
 					if bytes.Equal(ffj_key_Hello_Message, kn) {
@@ -106,6 +130,26 @@ mainparse:
 						goto mainparse
 					}
 
+				case 'N':
+
+					if bytes.Equal(ffj_key_Hello_Num, kn) {
+						currentKey = ffj_t_Hello_Num
+						state = fflib.FFParse_want_colon
+						goto mainparse
+					}
+
+				}
+
+				if fflib.SimpleLetterEqualFold(ffj_key_Hello_Created, kn) {
+					currentKey = ffj_t_Hello_Created
+					state = fflib.FFParse_want_colon
+					goto mainparse
+				}
+
+				if fflib.SimpleLetterEqualFold(ffj_key_Hello_Num, kn) {
+					currentKey = ffj_t_Hello_Num
+					state = fflib.FFParse_want_colon
+					goto mainparse
 				}
 
 				if fflib.EqualFoldRight(ffj_key_Hello_Message, kn) {
@@ -133,6 +177,12 @@ mainparse:
 
 				case ffj_t_Hello_Message:
 					goto handle_Message
+
+				case ffj_t_Hello_Num:
+					goto handle_Num
+
+				case ffj_t_Hello_Created:
+					goto handle_Created
 
 				case ffj_t_Hellono_such_key:
 					err = fs.SkipField(tok)
@@ -165,6 +215,72 @@ handle_Message:
 		} else {
 
 			uj.Message = string(fs.Output.String())
+
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Num:
+
+	/* handler: uj.Num type=int kind=int */
+
+	{
+		if tok != fflib.FFTok_integer && tok != fflib.FFTok_null {
+			return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for int", tok))
+		}
+	}
+
+	{
+
+		if tok == fflib.FFTok_null {
+
+		} else {
+
+			tval, err := fflib.ParseInt(fs.Output.Bytes(), 10, 64)
+
+			if err != nil {
+				return fs.WrapErr(err)
+			}
+
+			uj.Num = int(tval)
+
+		}
+	}
+
+	state = fflib.FFParse_after_value
+	goto mainparse
+
+handle_Created:
+
+	/* handler: uj.Created type=bool kind=bool */
+
+	{
+
+		{
+			if tok != fflib.FFTok_bool && tok != fflib.FFTok_null {
+				return fs.WrapErr(fmt.Errorf("cannot unmarshal %s into Go value for bool", tok))
+			}
+		}
+
+		if tok == fflib.FFTok_null {
+
+		} else {
+			tmpb := fs.Output.Bytes()
+
+			if bytes.Compare([]byte{'t', 'r', 'u', 'e'}, tmpb) == 0 {
+
+				uj.Created = true
+
+			} else if bytes.Compare([]byte{'f', 'a', 'l', 's', 'e'}, tmpb) == 0 {
+
+				uj.Created = false
+
+			} else {
+				err = errors.New("unexpected bytes for true/false value")
+				return fs.WrapErr(err)
+			}
 
 		}
 	}

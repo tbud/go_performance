@@ -447,6 +447,7 @@ got:
 
 - http://blog.golang.org/profiling-go-programs
 - https://blog.cloudflare.com/recycling-memory-buffers-in-go
+- http://dave.cheney.net/2013/06/30/how-to-write-benchmarks-in-go
 
 
 

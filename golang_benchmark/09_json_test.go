@@ -9,6 +9,8 @@ import (
 
 type NormalHello struct {
 	Message string
+	Num     int
+	Created bool
 }
 
 func init() {
@@ -54,7 +56,7 @@ func Benchmark09MarshalffjsonObjectWithPool(b *testing.B) {
 
 func Benchmark09NormualUnmarshalJson(b *testing.B) {
 	h := &NormalHello{}
-	buf := []byte(`{"Message":"world"}`)
+	buf := []byte(`{"message":"world", "num": 123, "created": true}`)
 	for i := 0; i < b.N; i++ {
 		json.Unmarshal(buf, h)
 	}
@@ -62,7 +64,7 @@ func Benchmark09NormualUnmarshalJson(b *testing.B) {
 
 func Benchmark09NormalUnMarshalWithffjsonObject(b *testing.B) {
 	h := &Hello{}
-	buf := []byte(`{"Message":"world"}`)
+	buf := []byte(`{"message":"world", "num": 123, "created": true}`)
 	for i := 0; i < b.N; i++ {
 		json.Unmarshal(buf, h)
 	}
@@ -70,7 +72,7 @@ func Benchmark09NormalUnMarshalWithffjsonObject(b *testing.B) {
 
 func Benchmark09Unmarshalffjson(b *testing.B) {
 	h := &Hello{}
-	buf := []byte(`{"Message":"world"}`)
+	buf := []byte(`{"message":"world", "num": 123, "created": true}`)
 	for i := 0; i < b.N; i++ {
 		ffjson.Unmarshal(buf, h)
 	}
@@ -78,7 +80,7 @@ func Benchmark09Unmarshalffjson(b *testing.B) {
 
 func Benchmark09UnmarshalffjsonObject(b *testing.B) {
 	h := &Hello{}
-	buf := []byte(`{"Message":"world"}`)
+	buf := []byte(`{"message":"world", "num": 123, "created": true}`)
 	for i := 0; i < b.N; i++ {
 		h.UnmarshalJSON(buf)
 	}
