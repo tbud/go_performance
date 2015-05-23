@@ -115,3 +115,35 @@ func Benchmark08ReturnWithGlob(b *testing.B) {
 
 	// println(globInt.sum)
 }
+
+func Benchmark08Fib(b *testing.B) {
+	for n := 0; n < b.N; n++ {
+		// always record the result of Fib to prevent
+		// the compiler eliminating the function call.
+		Fib(20)
+	}
+}
+
+func workerFibChan(iCh chan int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for _ = range iCh {
+		Fib(20)
+	}
+}
+
+func Benchmark08FibGoroutinePool(b *testing.B) {
+	iCh := make(chan int)
+	wg := new(sync.WaitGroup)
+
+	for i := 0; i < GoRoutineNum; i++ {
+		wg.Add(1)
+		go workerFibChan(iCh, wg)
+	}
+
+	for i := 0; i < b.N; i++ {
+		iCh <- i
+	}
+	close(iCh) // Closing channel (waiting in goroutines won't continue any more)
+	wg.Wait()  // Waiting for all goroutines to finish (otherwise they die as main routine dies)
+}
