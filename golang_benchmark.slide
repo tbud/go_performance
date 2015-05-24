@@ -443,6 +443,12 @@ got:
 
 - it is best to use goroutine pool
 
+* json serialized
+
+Use standard json or ffjson to test json serialized.
+
+* fib test
+
 * reference
 
 - http://blog.golang.org/profiling-go-programs
