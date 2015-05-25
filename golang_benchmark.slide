@@ -447,6 +447,10 @@ got:
 
 Use standard json or ffjson to test json serialized.
 
+run:
+
+	go test -bench Benchmark09 -benchmem -benchtime 5s
+
 * fib test
 
 * reference
